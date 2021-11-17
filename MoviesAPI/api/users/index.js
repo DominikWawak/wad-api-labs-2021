@@ -39,4 +39,32 @@ router.put('/:id', async (req, res) => {
         res.status(404).json({ code: 404, msg: 'Unable to Update User' });
     }
 });
+
+router.post('/:id/favourites', async (req, res) => {
+    const newFavourite = req.body;
+    if (newFavourite && newFavourite.id) {
+        const user = await User.findById(req.params.id);
+        if (user) {
+            let favourites = user.favourites;
+            (favourites) ? user.favourites.push(newFavourite) : user.favourites = [newFavourite];
+            await User.findByIdAndUpdate(user._id, { favourites: favourites }, {
+                new: true
+            });
+            res.status(201).json({ code: 201, msg: "Added Favourite" });
+        } else {
+            res.status(404).json({ code: 404, msg: 'Unable to add favourites' });
+        }
+    }
+});
+
+router.get('/:id/favourites', async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if (user) {
+        res.status(200).send(user.favourites);
+    } else {
+        res.status(404).json({ code: 404, msg: 'Unable to add favourites' });
+    }
+});
+
+
 export default router;
