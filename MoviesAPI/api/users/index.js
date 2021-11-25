@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 const router = express.Router(); // eslint-disable-line
 import jwt from 'jsonwebtoken';
 import movieModel from '../movies/movieModel';
+import { set } from 'mongoose';
 
 
 // Get all users
@@ -41,7 +42,11 @@ router.post('/',asyncHandler( async (req, res, next) => {
       res.status(401).json({success: false, msg: 'Please pass username and password.'});
     }
     if (req.query.action === 'register') {
-      await User.create(req.body).catch(next);
+        if(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/.test(req.body.password)){
+            await User.create(req.body).catch(next);}
+        else{
+            res.status(401).json({code: 401,msg: 'Authentication failed. Password to weak'});
+        }
       res.status(201).json({code: 201, msg: 'Successful created new user.'     });
     } else {
       const user = await User.findByUserName(req.body.username).catch(next);
@@ -77,7 +82,13 @@ router.post('/:userName/favourites', asyncHandler(async (req, res) => {
     const userName = req.params.userName;
     const movie = await movieModel.findByMovieDBId(newFavourite);
     const user = await User.findByUserName(userName);
-    awaituser.favourites.push(movie._id);
+    //tempFav = awaituser.favourites
+    //console.log(tempFav)
+    //await user.favourites=Set(tempFav)
+    
+    if(await user.favourites.includes(movie.id)){
+        await user.favourites.push(movie._id);
+    }
     await user.save(); 
     res.status(201).json(user); 
   }));
