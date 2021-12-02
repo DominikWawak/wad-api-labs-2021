@@ -8,7 +8,7 @@ const LoginPage = props => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = () => {
+  const logIn = () => {
     context.authenticate(userName, password);
   };
 
@@ -30,7 +30,7 @@ const LoginPage = props => {
         setPassword(e.target.value);
       }}></input><br />
       {/* Login web form  */}
-      <button onClick={login}>Log in</button>
+      <button onClick={logIn}>Log in</button>
       <p>Not Registered?
       <Link to="/signup">Sign Up!</Link></p>
     </>

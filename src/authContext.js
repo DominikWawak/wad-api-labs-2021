@@ -1,5 +1,5 @@
 import React, { useState, createContext } from "react";
-import { login, signup } from "./api/movie-api";
+import { logIn, signup } from "./api/movie-api";
 
 export const AuthContext = createContext(null);
 
@@ -16,7 +16,7 @@ const AuthContextProvider = (props) => {
   }
 
   const authenticate = async (username, password) => {
-    const result = await login(username, password);
+    const result = await logIn(username, password);
     if (result.token) {
       setToken(result.token)
       setIsAuthenticated(true);
