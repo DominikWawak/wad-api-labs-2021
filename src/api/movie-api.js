@@ -24,5 +24,5 @@ export const getMovies = () => {
          'Authorization': window.localStorage.getItem('token')
       }
     }
-    ).then(res => res.results.json());
+    ).then((res) => res.json());
   };
